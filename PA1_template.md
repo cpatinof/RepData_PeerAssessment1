@@ -30,7 +30,7 @@ The data has 2304 missing values for the `steps` column.
 
 ## What is mean total number of steps taken per day?
 
-I now report a histogram of the total number of steps taken each day. Since each row represents the number of steps taken during each 5-minute interval in a given day, in order to get the total number of steps in a day it is necessary to make an additional transformation to the data. I load the `dplyr` package in order to do so. Then, I need to load the `ggplot2` package in order to use that system as the plotting one.
+We now report a histogram of the total number of steps taken each day. Since each row represents the number of steps taken during each 5-minute interval in a given day, in order to get the total number of steps in a day it is necessary to make an additional transformation to the data. We load the `dplyr` package in order to do so. Then, we need to load the `ggplot2` package in order to use that system as the plotting one.
 
 
 ```r
@@ -56,11 +56,11 @@ mean_steps <- mean(activity_agg$steps, na.rm=T)
 median_steps <- median(activity_agg$steps, na.rm=T)
 ```
 
-The mean number of daily steps for this particular individual is 9354 and the median steps is 10395.
+The mean number of daily steps for this particular individual is 9354 and the median steps is 10395. Notice that in the previous aggregation we set the argument `na.rm` equal to `TRUE` in the `sum()` function. That decision implies that for the days where all values are missing, the total number of steps is going to be equal to 0. In case we did not set that argument to `TRUE`, the default `FALSE` will be used, yielding `NA` as the resulting sum for those cases. This situation can be seen in the histogram, where the bar for 0 shows 10 days for which there are all missing values and therefore the total sum of steps is equal to 0.
 
 ## What is the average daily activity pattern?
 
-In order to look at the average daily activity patterns, I must first perform some transformations to the original data. In this case, we now want to plot the average number of steps (across all days) for each 5-minute interval.
+In order to look at the average daily activity patterns, we must first perform some transformations to the original data. In this case, we now want to plot the average number of steps (across all days) for each 5-minute interval.
 
 
 ```r
@@ -78,7 +78,7 @@ p + geom_line() + labs(title="Average Number of Steps taken over every 5-minute 
 
 ![](PA1_template_files/figure-html/plot2-1.png) 
 
-The maximun number of average steps (across all days for each 5-minute interval) is 206.17 and corresponds to the 5-minute interval identified as 835.
+The maximun number of average steps (across all days for each 5-minute interval) is 206.17, and that value corresponds to the 5-minute interval identified as 835.
 
 ## Imputing missing values
 
@@ -89,7 +89,7 @@ missingvals <- sum(is.na(activity$steps))
 
 The dataset contains a total of 2304 missing values.
 
-Since there are days with all missing values, I use a very simple strategy for imputing missing values, and that is to use the mean value for the correspondent 5-minute interval. Therefore, I use the intermediate dataset (summary) generated in the previous step (mean steps for each 5-min int.). The following code merges the aggregated data (averaged steps by 5-minute interval) to the original data and then looks for missing data on column `steps` and replaces the values with the imputed ones (i.e. the averages for the corresponding 5-minute intervals).
+Since there are days with all missing values, we use a very simple strategy for imputing missing values, and that is to use the mean value for the correspondent 5-minute interval. Therefore, we use the intermediate dataset (summary) generated in the previous step (mean steps for each 5-min int.). The following code merges the aggregated data (averaged steps by 5-minute interval) to the original data and then looks for missing data on the column `steps` and replaces the values with the imputed ones (i.e. the averages for the corresponding 5-minute intervals).
 
 
 ```r
@@ -107,7 +107,7 @@ for (i in 1:dim(activity2)[1]) {
 }
 ```
 
-Now, I just create a new dataframe that is equal to the original one, but with the missing data filled in.
+Now, we just need to create a new dataframe that is equal to the original one, but with the missing data filled in.
 
 
 ```r
@@ -127,6 +127,17 @@ h + geom_histogram() + labs(title="Histogram of the Total Number of Steps taken 
 
 ![](PA1_template_files/figure-html/plot3-1.png) 
 
+Notice that in this case, the days with 0 are no longer present in the same amount. There are still a few of them, but not because of missing values, but because of actual 0´s in the data. We can actually use the base plotting system to take a look at both histograms in the same graph.
+
+
+```r
+par(mfrow=c(1,2))
+hist(activity_agg$steps, breaks=30, col="lightgray", main="Removing Missing Values")
+hist(activity_agg3$steps, breaks=30, col="lightgray", main="Imputing Missing Values")
+```
+
+![](PA1_template_files/figure-html/plot4-1.png) 
+
 Let´s now look at the mean and median total number of steps (using the imputed dataset).
 
 
@@ -135,7 +146,7 @@ mean_steps <- mean(activity_agg3$steps, na.rm=T)
 median_steps <- median(activity_agg3$steps, na.rm=T)
 ```
 
-The mean number of daily steps for this particular individual is 10766 and the median steps is 10766.
+The mean number of daily steps for this particular individual is 10766 and the median steps is 10766. These values are higher than the previous ones, consistent with the imputation that was done.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -165,7 +176,7 @@ p <- ggplot(activity_agg4, aes(x=interval,y=steps))
 p + geom_line() + facet_grid(day2~.) +
         labs(title="Average Number of Steps taken over every 5-minute Interval",
              x="5-Minute Interval",y="Steps (Average across all days)") +
-        theme_bw(base_family="Times", base_size=10)
+        theme_bw(base_family="Times", base_size=12)
 ```
 
-![](PA1_template_files/figure-html/plot4-1.png) 
+![](PA1_template_files/figure-html/plot5-1.png) 
